@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go_curd/handlers"
 	"log"
 	"net/http"
 
@@ -18,11 +19,11 @@ func main() {
 
 	// using handler.FunctionName because we are defineing out handler functions in go_curd/handlers
 
-	r.HandleFunc("/users", handlers.getUsers).Methods("GET")
-	r.HandleFunc("/users", handlers.createUser).Methods("POST")
-	r.HandleFunc("/users/{id}", handlers.getUser).Methods("GET")
-	r.HandleFunc("/users/{id}", handlers.updateUser).Methods("PUT")
-	r.HandleFunc("/users/{id}", handlers.deleteUser).Methods("DELETE")
+	r.HandleFunc("/users", handlers.GetUsers).Methods("GET")
+	r.HandleFunc("/users", handlers.CreateUser).Methods("POST")
+	// r.HandleFunc("/users/{id}", handlers.getUser).Methods("GET")
+	// r.HandleFunc("/users/{id}", handlers.updateUser).Methods("PUT")
+	// r.HandleFunc("/users/{id}", handlers.deleteUser).Methods("DELETE")
 
 	fmt.Println("Server Running on http://localhost:8000")
 

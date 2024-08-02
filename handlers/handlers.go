@@ -3,9 +3,11 @@ package handlers
 import (
 	"encoding/json"
 	"go_curd/models"
-	// "go_curd/db"
-	// "go_curd/models"
+
+	"go_curd/db"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 /*
@@ -21,8 +23,8 @@ r -> *http.Request is use to recive a request (pointer to the http request struc
 
 // getUser Handler function
 // This handler gets all the data from the database and writes them to response as json
-func getUsers(w http.ResponseWriter, r *http.Request) {
-	users, err := db.getUsers()
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	users, err := db.GetUsers()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -31,7 +33,7 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(users)
 }
 
-func createUser(w http.ResponseWriter, r *http.Request) {
+func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -40,7 +42,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = db.createUser(&user)
+	err = db.CreateUser(&user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -49,4 +51,15 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(user)
 
+}
+
+func GetUser(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+
+	user, err := db.GetUser(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	json.NewEncoder(w).Encode(user)
 }
