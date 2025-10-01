@@ -1,25 +1,25 @@
 package main
 
 import (
+	"go-curd-api/database"
+	"go-curd-api/models"
+	"go-curd-api/routes"
+
 	"github.com/gofiber/fiber/v2"
 )
-
-type User struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-}
-
-var users = []User{
-	{ID: 1, Name: "Alice"},
-	{ID: 2, Name: "Bob"},
-}
 
 func main() {
 	app := fiber.New()
 
-	app.Get("/users", func(c *fiber.Ctx) error {
-		return c.JSON(users)
-	})
+	// connect database
+	database.Connect()
 
+	// migrate schema
+	database.DB.AutoMigrate(&models.Book{})
+
+	// setup routes
+	routes.BookRoutes(app)
+
+	// start server
 	app.Listen(":3000")
 }
